@@ -21,9 +21,11 @@
   ],
   "dependencies": {
     "async-mutex": "^0.4.1",
-    "better-sqlite3": "^11.3.0",
     "drizzle-orm": "^0.33.0",
     "zod": "^3.22.4"
+  },
+  "peerDependencies": {
+    "better-sqlite3": ">=7"
   },
   "devDependencies": {
     "@tsconfig/node21": "^21.0.3",
