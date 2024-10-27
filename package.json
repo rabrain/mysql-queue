@@ -12,6 +12,7 @@
     "README.md",
     "LICENSE"
   ],
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hoarder-app/liteque.git"
