@@ -3,13 +3,12 @@
   "name": "liteque",
   "description": "A sqlite-based job queue for Node.js",
   "author": "Mohamed Bassem <me@mbassem.com>",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "src/drizzle",
     "README.md",
     "LICENSE"
   ],
@@ -37,7 +36,7 @@
     "vitest": "^1.3.1"
   },
   "scripts": {
-    "build": "tsc -d",
+    "build": "tsc -d && cp -r src/drizzle dist/drizzle",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
     "format": "prettier . --ignore-path ../../.prettierignore",
