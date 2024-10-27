@@ -3,7 +3,7 @@
   "name": "liteque",
   "description": "A sqlite-based job queue for Node.js",
   "author": "Mohamed Bassem <me@mbassem.com>",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "main": "dist/index.ts",
   "types": "dist/index.d.ts",
@@ -37,7 +37,7 @@
     "vitest": "^1.3.1"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -d",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
     "format": "prettier . --ignore-path ../../.prettierignore",
