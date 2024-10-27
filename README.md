@@ -1,13 +1,7 @@
-<div align="center">
-    <a href="https://github.com/hoarder-app/liteque/actions/workflows/ci.yml">
-        <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/hoarder-app/liteque/ci.yml" />
-    </a>
-    <a href="https://github.com/hoarder-app/liteque/releases">
-        <img alt="GitHub Release" src="https://img.shields.io/github/v/release/hoarder-app/liteque" />
-    </a>
-</div>
-
 # Liteque
+
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/hoarder-app/liteque/ci.yml) ![NPM Version](https://img.shields.io/npm/v/liteque)
+
 
 A simple typesafe sqlite-based job queue for Node.js.
 
@@ -20,7 +14,7 @@ $ npm install liteque
 ## Usage
 
 ```ts
-import { buildDBClient, SqliteQueue } from "liteque";
+import { buildDBClient, Runner, SqliteQueue } from "liteque";
 import { z } from "zod";
 
 const db = buildDBClient(":memory:", true);
