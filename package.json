@@ -1,6 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "liteque",
+  "description": "A sqlite-based job queue for Node.js",
   "author": "Mohamed Bassem <me@mbassem.com>",
   "version": "0.1.0",
   "type": "module",
@@ -8,6 +9,7 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
+    "src/drizzle",
     "README.md",
     "LICENSE"
   ],
