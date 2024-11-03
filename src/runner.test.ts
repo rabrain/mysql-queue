@@ -288,7 +288,7 @@ describe("SqiteQueueRunner", () => {
     await queue.db
       .update(tasksTable)
       .set({ payload: "{}" })
-      .where(eq(tasksTable.id, job.id));
+      .where(eq(tasksTable.id, job!.id));
 
     const barrier = new Barrier(1);
     barrier.allowParticipantsToProceed();
@@ -436,5 +436,31 @@ describe("SqiteQueueRunner", () => {
     expect(results.numCalled).toEqual(1000);
     expect(results.numCompleted).toEqual(1000);
     expect(results.numFailed).toEqual(0);
+  });
+
+  test("idempotency keys", async () => {
+    const queue = new SqliteQueue<Work>(
+      "queue1",
+      buildDBClient(":memory:", true),
+      {
+        defaultJobArgs: {
+          numRetries: 0,
+        },
+      },
+    );
+
+    await queue.enqueue({ increment: 1 });
+    await queue.enqueue({ increment: 2 }, { idempotencyKey: "2" });
+    await queue.enqueue({ increment: 2 }, { idempotencyKey: "2" });
+    await queue.enqueue({ increment: 2 }, { idempotencyKey: "2" });
+    await queue.enqueue({ increment: 3 }, { idempotencyKey: "3" });
+
+    expect(await queue.stats()).toEqual({
+      pending: 3,
+      running: 0,
+      pending_retry: 0,
+      failed: 0,
+    });
+
   });
 });

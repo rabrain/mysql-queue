@@ -8,6 +8,11 @@ export interface SqliteQueueOptions {
   };
 }
 
+export interface EnqueueOptions {
+  numRetries?: number;
+  idempotencyKey?: string;
+}
+
 export interface RunnerFuncs<T> {
   run: (job: DequeuedJob<T>) => Promise<void>;
   onComplete?: (job: DequeuedJob<T>) => Promise<void>;

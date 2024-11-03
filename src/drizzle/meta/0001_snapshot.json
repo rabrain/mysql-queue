@@ -1,6 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
+  "id": "0f918c72-5b27-4e4c-9027-631ead290bf2",
+  "prevId": "3094773c-0138-46b2-b617-4b10093b0f53",
   "tables": {
     "tasks": {
       "name": "tasks",
@@ -68,6 +70,13 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "idempotencyKey": {
+          "name": "idempotencyKey",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {
@@ -112,6 +121,14 @@
             "allocationId"
           ],
           "isUnique": false
+        },
+        "tasks_queue_idempotencyKey_unique": {
+          "name": "tasks_queue_idempotencyKey_unique",
+          "columns": [
+            "queue",
+            "idempotencyKey"
+          ],
+          "isUnique": true
         }
       },
       "foreignKeys": {},
@@ -121,9 +138,11 @@
   },
   "enums": {},
   "_meta": {
+    "schemas": {},
     "tables": {},
     "columns": {}
   },
-  "id": "3094773c-0138-46b2-b617-4b10093b0f53",
-  "prevId": "00000000-0000-0000-0000-000000000000"
+  "internal": {
+    "indexes": {}
+  }
 }

@@ -8,6 +8,13 @@
       "when": 1720992922192,
       "tag": "0000_wonderful_talisman",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1730656128884,
+      "tag": "0001_wandering_giant_man",
+      "breakpoints": true
     }
   ]
 }

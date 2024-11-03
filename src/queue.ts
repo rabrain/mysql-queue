@@ -2,7 +2,7 @@ import assert from "node:assert";
 import { and, asc, count, eq, gt, lt, or } from "drizzle-orm";
 
 import { buildDBClient } from "./db";
-import { SqliteQueueOptions } from "./options";
+import { EnqueueOptions, SqliteQueueOptions } from "./options";
 import { Job, tasksTable } from "./schema";
 
 // generate random id
@@ -29,19 +29,27 @@ export class SqliteQueue<T> {
     return this.queueName;
   }
 
-  async enqueue(payload: T): Promise<Job> {
-    const job = await this.db
+  /**
+   * Enqueue a job into the queue.
+   * If a job with the same idempotency key is already enqueued, it will be ignored and undefined will be returned.
+   */
+  async enqueue(payload: T, options?: EnqueueOptions): Promise<Job | undefined> {
+    const opts = options ?? {};
+    const numRetries = opts.numRetries ?? this.options.defaultJobArgs.numRetries;
+    const [job] = await this.db
       .insert(tasksTable)
       .values({
         queue: this.queueName,
         payload: JSON.stringify(payload),
-        numRunsLeft: this.options.defaultJobArgs.numRetries + 1,
-        maxNumRuns: this.options.defaultJobArgs.numRetries + 1,
+        numRunsLeft: numRetries + 1,
+        maxNumRuns: numRetries + 1,
         allocationId: generateAllocationId(),
+        idempotencyKey: opts.idempotencyKey,
       })
+      .onConflictDoNothing({target: [tasksTable.queue, tasksTable.idempotencyKey]})
       .returning();
 
-    return job[0];
+    return job;
   }
 
   async stats() {
