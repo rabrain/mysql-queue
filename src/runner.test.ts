@@ -129,7 +129,9 @@ function buildRunner(
       },
       onError: async (job: DequeuedJobError<Work>) => {
         console.log("FAILED:", job);
-        results.numFailed++;
+        if (job.numRetriesLeft == 0) {
+          results.numFailed++;
+        }
       },
     },
     opts,

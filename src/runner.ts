@@ -66,7 +66,7 @@ export class Runner<T> {
 
   async runOnce(job: Job) {
     assert(job.allocationId);
-
+    const runNumber = job.maxNumRuns - job.numRunsLeft - 1;
     let parsed: T;
     try {
       parsed = JSON.parse(job.payload) as T;
@@ -74,22 +74,24 @@ export class Runner<T> {
         parsed = this.opts.validator.parse(parsed);
       }
     } catch (e) {
-      if (job.numRunsLeft <= 0) {
-        await this.funcs.onError?.({
-          id: job.id.toString(),
-          error: e as Error,
-        });
-        await this.queue.finalize(job.id, job.allocationId, "failed");
-      } else {
-        await this.queue.finalize(job.id, job.allocationId, "pending_retry");
-      }
+      await this.funcs.onError?.({
+        id: job.id.toString(),
+        error: e as Error,
+        runNumber,
+        numRetriesLeft: job.numRunsLeft,
+      }).catch(() => {});
+      await this.queue.finalize(
+        job.id,
+        job.allocationId,
+        job.numRunsLeft <= 0 ? "failed" : "pending_retry",
+      );
       return;
     }
 
     const dequeuedJob: DequeuedJob<T> = {
       id: job.id.toString(),
       data: parsed,
-      runNumber: job.maxNumRuns - job.numRunsLeft - 1,
+      runNumber,
     };
     try {
       await Promise.race([
@@ -104,12 +106,17 @@ export class Runner<T> {
       await this.funcs.onComplete?.(dequeuedJob);
       await this.queue.finalize(job.id, job.allocationId, "completed");
     } catch (e) {
-      if (job.numRunsLeft <= 0) {
-        await this.funcs.onError?.({ ...dequeuedJob, error: e as Error });
-        await this.queue.finalize(job.id, job.allocationId, "failed");
-      } else {
-        await this.queue.finalize(job.id, job.allocationId, "pending_retry");
-      }
+      await this.funcs.onError?.({
+        ...dequeuedJob,
+        error: e as Error,
+        runNumber,
+        numRetriesLeft: job.numRunsLeft,
+      }).catch(() => {});
+      await this.queue.finalize(
+        job.id,
+        job.allocationId,
+        job.numRunsLeft <= 0 ? "failed" : "pending_retry",
+      );
     }
   }
 }
