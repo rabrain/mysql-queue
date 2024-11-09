@@ -29,6 +29,7 @@ const queue = new SqliteQueue<ZRequest>("requests", db, {
     defaultJobArgs: {
         numRetries: 2,
     },
+    keepFailedJobs: false,
 });
 
 // Enqueue a job
