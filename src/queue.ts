@@ -136,7 +136,7 @@ export class SqliteQueue<T> {
     alloctionId: string,
     status: "completed" | "pending_retry" | "failed",
   ) {
-    if (status == "completed") {
+    if (status == "completed" || (status == "failed" && !this.options.keepFailedJobs)) {
       await this.db
         .delete(tasksTable)
         .where(

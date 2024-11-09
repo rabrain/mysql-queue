@@ -6,6 +6,7 @@ export interface SqliteQueueOptions {
   defaultJobArgs: {
     numRetries: number;
   };
+  keepFailedJobs: boolean;
 }
 
 export interface EnqueueOptions {
