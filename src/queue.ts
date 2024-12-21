@@ -1,24 +1,24 @@
 import assert from "node:assert";
-import { and, asc, count, eq, gt, lt, or } from "drizzle-orm";
+import { and, asc, count, eq, gt, lt, or, sql } from "drizzle-orm";
 
-import { buildDBClient } from "./db";
-import { EnqueueOptions, SqliteQueueOptions } from "./options";
-import { Job, tasksTable } from "./schema";
+import { affectedRows, buildDBClient } from "./db";
+import { EnqueueOptions, QueueOptions } from "./options";
+import { Job, tasksTable } from "./db/schema";
 
 // generate random id
 function generateAllocationId() {
   return Math.random().toString(36).substring(2, 15);
 }
 
-export class SqliteQueue<T> {
+export class LiteQueue<T> {
   queueName: string;
   db: ReturnType<typeof buildDBClient>;
-  options: SqliteQueueOptions;
+  options: QueueOptions;
 
   constructor(
     name: string,
     db: ReturnType<typeof buildDBClient>,
-    options: SqliteQueueOptions,
+    options: QueueOptions,
   ) {
     this.queueName = name;
     this.options = options;
@@ -36,18 +36,29 @@ export class SqliteQueue<T> {
   async enqueue(payload: T, options?: EnqueueOptions): Promise<Job | undefined> {
     const opts = options ?? {};
     const numRetries = opts.numRetries ?? this.options.defaultJobArgs.numRetries;
-    const [job] = await this.db
+    const jobData = {
+      queue: this.queueName,
+      payload: JSON.stringify(payload),
+      numRunsLeft: numRetries + 1,
+      maxNumRuns: numRetries + 1,
+      allocationId: generateAllocationId(),
+      idempotencyKey: opts.idempotencyKey,
+    };
+    
+    const result = await this.db
       .insert(tasksTable)
-      .values({
-        queue: this.queueName,
-        payload: JSON.stringify(payload),
-        numRunsLeft: numRetries + 1,
-        maxNumRuns: numRetries + 1,
-        allocationId: generateAllocationId(),
-        idempotencyKey: opts.idempotencyKey,
-      })
-      .onConflictDoNothing({target: [tasksTable.queue, tasksTable.idempotencyKey]})
-      .returning();
+      .values(jobData)
+      .onDuplicateKeyUpdate({
+        set: { id: sql`id` },
+    });
+
+    // Fetch and return the complete job
+    const insertedId = Number(result[0].insertId);
+    const [job] = await this.db
+      .select()
+      .from(tasksTable)
+      .where(eq(tasksTable.id, insertedId))
+      .limit(1);
 
     return job;
   }
@@ -121,13 +132,13 @@ export class SqliteQueue<T> {
             // The compare and swap is necessary to avoid race conditions
             eq(tasksTable.allocationId, job.allocationId),
           ),
-        )
-        .returning();
-      if (result.length == 0) {
+        );
+      const rows = affectedRows(result);
+      if (rows == 0) {
         return null;
       }
-      assert(result.length == 1);
-      return result[0];
+      assert(rows == 1);
+      return job;
     });
   }
 

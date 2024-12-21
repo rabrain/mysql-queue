@@ -3,12 +3,12 @@
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/hoarder-app/liteque/ci.yml) ![NPM Version](https://img.shields.io/npm/v/liteque)
 
 
-A simple typesafe sqlite-based job queue for Node.js.
+A simple typesafe mysql-based job queue for Node.js.
 
 ## Installation
 
 ```bash
-$ npm install liteque
+$ npm install mysql-queue
 ```
 
 ## Usage

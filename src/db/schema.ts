@@ -1,15 +1,24 @@
-import { index, integer, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
+import {
+  index,
+  int as integer,
+  text,
+  timestamp,
+  mysqlTable,
+  unique,
+} from "drizzle-orm/mysql-core";
+
+export const createTable = mysqlTable;
 
 function createdAtField() {
-  return integer("createdAt", { mode: "timestamp" })
+  return timestamp("createdAt", { mode: "date" })
     .notNull()
     .$defaultFn(() => new Date());
 }
 
-export const tasksTable = sqliteTable(
+export const tasksTable = createTable(
   "tasks",
   {
-    id: integer("id").notNull().primaryKey({ autoIncrement: true }),
+    id: integer("id").notNull().primaryKey().autoincrement(),
     queue: text("queue").notNull(),
     payload: text("payload").notNull(),
     createdAt: createdAtField(),
@@ -18,7 +27,7 @@ export const tasksTable = sqliteTable(
     })
       .notNull()
       .default("pending"),
-    expireAt: integer("expireAt", { mode: "timestamp" }),
+    expireAt: timestamp("expireAt", { mode: "date" }),
     allocationId: text("allocationId").notNull(),
     numRunsLeft: integer("numRunsLeft").notNull(),
     maxNumRuns: integer("maxNumRuns").notNull(),

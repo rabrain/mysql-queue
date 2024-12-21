@@ -3,7 +3,7 @@ import { describe, expect, test } from "vitest";
 
 import {
     buildDBClient,
-    SqliteQueue
+    LiteQueue
 } from "./";
 
 interface Work {
@@ -12,11 +12,11 @@ interface Work {
   blockForSec?: number;
 }
 
-describe("SqliteQueue", () => {
+describe("LiteQueue", () => {
   test("idempotency keys", async () => {
-    const queue = new SqliteQueue<Work>(
+    const queue = new LiteQueue<Work>(
       "queue1",
-      buildDBClient(":memory:", true),
+      buildDBClient(undefined, true),
       {
         defaultJobArgs: {
           numRetries: 0,
@@ -41,9 +41,9 @@ describe("SqliteQueue", () => {
   });
 
   test("keep failed jobs", async () => {
-    const queueKeep = new SqliteQueue<Work>(
+    const queueKeep = new LiteQueue<Work>(
       "queue1",
-      buildDBClient(":memory:", true),
+      buildDBClient(undefined, true),
       {
         defaultJobArgs: {
           numRetries: 0,
@@ -52,9 +52,9 @@ describe("SqliteQueue", () => {
       },
     );
 
-    const queueDontKeep = new SqliteQueue<Work>(
+    const queueDontKeep = new LiteQueue<Work>(
       "queue2",
-      buildDBClient(":memory:", true),
+      buildDBClient(undefined, true),
       {
         defaultJobArgs: {
           numRetries: 0,

@@ -1,19 +1,12 @@
 {
-  "version": "5",
-  "dialect": "sqlite",
+  "version": "7",
+  "dialect": "mysql",
   "entries": [
     {
       "idx": 0,
       "version": "5",
-      "when": 1720992922192,
-      "tag": "0000_wonderful_talisman",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1730656128884,
-      "tag": "0001_wandering_giant_man",
+      "when": 1734791710708,
+      "tag": "0000_stiff_martin_li",
       "breakpoints": true
     }
   ]

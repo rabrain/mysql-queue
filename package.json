@@ -1,9 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "liteque",
-  "description": "A sqlite-based job queue for Node.js",
-  "author": "Mohamed Bassem <me@mbassem.com>",
-  "version": "0.3.0",
+  "name": "mysql-queue",
+  "description": "A lite job queue for Node.js",
+  "author": "lilac <hi@rabain.com>",
+  "version": "0.1.0",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,26 +18,24 @@
     "url": "git+https://github.com/hoarder-app/liteque.git"
   },
   "keywords": [
-    "sqlite",
     "queue"
   ],
   "dependencies": {
     "async-mutex": "^0.4.1",
     "drizzle-orm": "^0.33.0",
+    "eslint": "^9.17.0",
+    "mysql2": "^3.11.5",
     "zod": "^3.22.4"
-  },
-  "peerDependencies": {
-    "better-sqlite3": ">=7"
   },
   "devDependencies": {
     "@tsconfig/node21": "^21.0.3",
-    "@types/better-sqlite3": "^7.6.11",
     "drizzle-kit": "^0.24.02",
     "typescript": "^5.6.3",
     "vitest": "^1.3.1"
   },
   "scripts": {
     "build": "tsc -d && cp -r src/drizzle dist/drizzle",
+    "db:generate": "drizzle-kit generate",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
     "format": "prettier . --ignore-path ../../.prettierignore",

@@ -2,18 +2,18 @@ import assert from "node:assert";
 import { Semaphore } from "async-mutex";
 
 import { RunnerFuncs, RunnerOptions } from "./options";
-import { SqliteQueue } from "./queue";
-import { Job } from "./schema";
+import { LiteQueue } from "./queue";
+import { Job } from "./db/schema";
 import { DequeuedJob } from "./types";
 
 export class Runner<T> {
-  queue: SqliteQueue<T>;
+  queue: LiteQueue<T>;
   funcs: RunnerFuncs<T>;
   opts: RunnerOptions<T>;
   stopping = false;
 
   constructor(
-    queue: SqliteQueue<T>,
+    queue: LiteQueue<T>,
     funcs: RunnerFuncs<T>,
     opts: RunnerOptions<T>,
   ) {

@@ -1,10 +1,11 @@
 import type { Config } from "drizzle-kit";
 
 export default {
-  schema: "./src/schema.ts",
+  schema: "./src/db/schema.ts",
   out: "./src/drizzle",
-  dialect: "sqlite",
+  dialect: "mysql",
   dbCredentials: {
-    url: "data.db",
+    host: "localhost",
+    database: "queue",
   },
 } satisfies Config;

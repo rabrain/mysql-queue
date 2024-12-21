@@ -1,13 +1,16 @@
 CREATE TABLE `tasks` (
-	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`id` int AUTO_INCREMENT NOT NULL,
 	`queue` text NOT NULL,
 	`payload` text NOT NULL,
-	`createdAt` integer NOT NULL,
-	`status` text DEFAULT 'pending' NOT NULL,
-	`expireAt` integer,
+	`createdAt` timestamp NOT NULL,
+	`status` text NOT NULL DEFAULT ('pending'),
+	`expireAt` timestamp,
 	`allocationId` text NOT NULL,
-	`numRunsLeft` integer NOT NULL,
-	`maxNumRuns` integer NOT NULL
+	`numRunsLeft` int NOT NULL,
+	`maxNumRuns` int NOT NULL,
+	`idempotencyKey` text,
+	CONSTRAINT `tasks_id` PRIMARY KEY(`id`),
+	CONSTRAINT `tasks_queue_idempotencyKey_unique` UNIQUE(`queue`,`idempotencyKey`)
 );
 --> statement-breakpoint
 CREATE INDEX `tasks_queue_idx` ON `tasks` (`queue`);--> statement-breakpoint

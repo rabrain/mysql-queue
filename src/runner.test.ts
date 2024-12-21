@@ -10,9 +10,9 @@ import {
   DequeuedJobError,
   Runner,
   RunnerOptions,
-  SqliteQueue,
+  LiteQueue,
 } from "./";
-import { tasksTable } from "./schema";
+import { tasksTable } from "./db/schema";
 
 class Baton {
   semaphore: Semaphore;
@@ -85,7 +85,7 @@ interface Results {
   numFailed: number;
 }
 
-async function waitUntilAllSettled(queue: SqliteQueue<Work>) {
+async function waitUntilAllSettled(queue: LiteQueue<Work>) {
   let stats = await queue.stats();
   while (stats.running > 0 || stats.pending > 0 || stats.pending_retry > 0) {
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -95,7 +95,7 @@ async function waitUntilAllSettled(queue: SqliteQueue<Work>) {
 }
 
 function buildRunner(
-  queue: SqliteQueue<Work>,
+  queue: LiteQueue<Work>,
   opts: RunnerOptions<Work>,
   barrier: Barrier,
   inputResults?: Results,
@@ -142,9 +142,9 @@ function buildRunner(
 
 describe("SqiteQueueRunner", () => {
   test("should run jobs with correct concurrency", async () => {
-    const queue = new SqliteQueue<Work>(
+    const queue = new LiteQueue<Work>(
       "queue1",
-      buildDBClient(":memory:", true),
+      buildDBClient(undefined, true),
       {
         defaultJobArgs: {
           numRetries: 0,
@@ -204,9 +204,9 @@ describe("SqiteQueueRunner", () => {
   });
 
   test("should retry errors", async () => {
-    const queue = new SqliteQueue<Work>(
+    const queue = new LiteQueue<Work>(
       "queue1",
-      buildDBClient(":memory:", true),
+      buildDBClient(undefined, true),
       {
         defaultJobArgs: {
           numRetries: 2,
@@ -242,9 +242,9 @@ describe("SqiteQueueRunner", () => {
   });
 
   test("timeouts are respected", async () => {
-    const queue = new SqliteQueue<Work>(
+    const queue = new LiteQueue<Work>(
       "queue1",
-      buildDBClient(":memory:", true),
+      buildDBClient(undefined, true),
       {
         defaultJobArgs: {
           numRetries: 1,
@@ -278,9 +278,9 @@ describe("SqiteQueueRunner", () => {
   });
 
   test("serialization errors", async () => {
-    const queue = new SqliteQueue<Work>(
+    const queue = new LiteQueue<Work>(
       "queue1",
-      buildDBClient(":memory:", true),
+      buildDBClient(undefined, true),
       {
         defaultJobArgs: {
           numRetries: 1,
@@ -323,9 +323,9 @@ describe("SqiteQueueRunner", () => {
   });
 
   test("concurrent runners", async () => {
-    const queue = new SqliteQueue<Work>(
+    const queue = new LiteQueue<Work>(
       "queue1",
-      buildDBClient(":memory:", true),
+      buildDBClient(undefined, true),
       {
         defaultJobArgs: {
           numRetries: 0,
@@ -387,14 +387,14 @@ describe("SqiteQueueRunner", () => {
   });
 
   test("large test", async () => {
-    const db = buildDBClient(":memory:", true);
-    const queue1 = new SqliteQueue<Work>("queue1", db, {
+    const db = buildDBClient(undefined, true);
+    const queue1 = new LiteQueue<Work>("queue1", db, {
       defaultJobArgs: {
         numRetries: 0,
       },
       keepFailedJobs: true,
     });
-    const queue2 = new SqliteQueue<Work>("queue2", db, {
+    const queue2 = new LiteQueue<Work>("queue2", db, {
       defaultJobArgs: {
         numRetries: 0,
       },

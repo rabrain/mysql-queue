@@ -2,7 +2,7 @@ import { ZodType } from "zod";
 
 import { DequeuedJob, DequeuedJobError } from "./types";
 
-export interface SqliteQueueOptions {
+export interface QueueOptions {
   defaultJobArgs: {
     numRetries: number;
   };

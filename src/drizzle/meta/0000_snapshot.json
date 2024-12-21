@@ -1,14 +1,16 @@
 {
-  "version": "6",
-  "dialect": "sqlite",
+  "version": "5",
+  "dialect": "mysql",
+  "id": "d5ac27ee-fb1f-4d8b-977d-23ef372e91b0",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "tasks": {
       "name": "tasks",
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
-          "primaryKey": true,
+          "type": "int",
+          "primaryKey": false,
           "notNull": true,
           "autoincrement": true
         },
@@ -28,7 +30,7 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "integer",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -39,11 +41,11 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'pending'"
+          "default": "('pending')"
         },
         "expireAt": {
           "name": "expireAt",
-          "type": "integer",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -57,16 +59,23 @@
         },
         "numRunsLeft": {
           "name": "numRunsLeft",
-          "type": "integer",
+          "type": "int",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "maxNumRuns": {
           "name": "maxNumRuns",
-          "type": "integer",
+          "type": "int",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "idempotencyKey": {
+          "name": "idempotencyKey",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         }
       },
@@ -115,15 +124,32 @@
         }
       },
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "compositePrimaryKeys": {
+        "tasks_id": {
+          "name": "tasks_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "tasks_queue_idempotencyKey_unique": {
+          "name": "tasks_queue_idempotencyKey_unique",
+          "columns": [
+            "queue",
+            "idempotencyKey"
+          ]
+        }
+      }
     }
   },
-  "enums": {},
   "_meta": {
+    "schemas": {},
     "tables": {},
     "columns": {}
   },
-  "id": "3094773c-0138-46b2-b617-4b10093b0f53",
-  "prevId": "00000000-0000-0000-0000-000000000000"
+  "internal": {
+    "tables": {},
+    "indexes": {}
+  }
 }
