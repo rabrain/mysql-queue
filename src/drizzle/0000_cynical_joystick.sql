@@ -1,14 +1,14 @@
 CREATE TABLE `tasks` (
 	`id` int AUTO_INCREMENT NOT NULL,
-	`queue` text NOT NULL,
+	`queue` varchar(255) NOT NULL,
 	`payload` text NOT NULL,
 	`createdAt` timestamp NOT NULL,
-	`status` text NOT NULL DEFAULT ('pending'),
+	`status` varchar(50) NOT NULL DEFAULT 'pending',
 	`expireAt` timestamp,
-	`allocationId` text NOT NULL,
+	`allocationId` varchar(50) NOT NULL,
 	`numRunsLeft` int NOT NULL,
 	`maxNumRuns` int NOT NULL,
-	`idempotencyKey` text,
+	`idempotencyKey` varchar(255),
 	CONSTRAINT `tasks_id` PRIMARY KEY(`id`),
 	CONSTRAINT `tasks_queue_idempotencyKey_unique` UNIQUE(`queue`,`idempotencyKey`)
 );

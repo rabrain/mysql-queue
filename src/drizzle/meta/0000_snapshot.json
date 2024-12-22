@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "d5ac27ee-fb1f-4d8b-977d-23ef372e91b0",
+  "id": "5e96ed89-0bdf-4c0d-b7d9-4ab6d0111973",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "tasks": {
@@ -16,7 +16,7 @@
         },
         "queue": {
           "name": "queue",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -37,11 +37,11 @@
         },
         "status": {
           "name": "status",
-          "type": "text",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "('pending')"
+          "default": "'pending'"
         },
         "expireAt": {
           "name": "expireAt",
@@ -52,7 +52,7 @@
         },
         "allocationId": {
           "name": "allocationId",
-          "type": "text",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -73,7 +73,7 @@
         },
         "idempotencyKey": {
           "name": "idempotencyKey",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
