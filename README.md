@@ -1,6 +1,6 @@
-# Liteque
+# MySQL Lite Queue
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/hoarder-app/liteque/ci.yml) ![NPM Version](https://img.shields.io/npm/v/liteque)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/rabrain/mysql-queue/ci.yml) ![NPM Version](https://img.shields.io/npm/v/mysql-queue)
 
 
 A simple typesafe mysql-based job queue for Node.js.
@@ -14,10 +14,10 @@ $ npm install mysql-queue
 ## Usage
 
 ```ts
-import { buildDBClient, Runner, SqliteQueue } from "liteque";
+import { connect, Runner, LiteQueue } from "mysql-queue";
 import { z } from "zod";
 
-const db = buildDBClient(":memory:", true);
+const db = connect("mysql://root:root@localhost:3306/queue");
 
 const requestSchema = z.object({
     message: z.string(),
@@ -25,7 +25,7 @@ const requestSchema = z.object({
 const ZRequest = z.infer<typeof requestSchema>;
 
 // Init the queue
-const queue = new SqliteQueue<ZRequest>("requests", db, {
+const queue = new LiteQueue<ZRequest>("requests", db, {
     defaultJobArgs: {
         numRetries: 2,
     },

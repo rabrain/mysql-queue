@@ -5,6 +5,7 @@ import {
   timestamp,
   mysqlTable,
   unique,
+  varchar,
 } from "drizzle-orm/mysql-core";
 
 export const createTable = mysqlTable;
@@ -19,19 +20,20 @@ export const tasksTable = createTable(
   "tasks",
   {
     id: integer("id").notNull().primaryKey().autoincrement(),
-    queue: text("queue").notNull(),
+    queue: varchar("queue", { length: 255 }).notNull(),
     payload: text("payload").notNull(),
     createdAt: createdAtField(),
-    status: text("status", {
+    status: varchar("status", {
+      length: 50,
       enum: ["pending", "running", "pending_retry", "failed"],
     })
       .notNull()
       .default("pending"),
     expireAt: timestamp("expireAt", { mode: "date" }),
-    allocationId: text("allocationId").notNull(),
+    allocationId: varchar("allocationId", { length: 50 }).notNull(),
     numRunsLeft: integer("numRunsLeft").notNull(),
     maxNumRuns: integer("maxNumRuns").notNull(),
-    idempotencyKey: text("idempotencyKey"),
+    idempotencyKey: varchar("idempotencyKey", { length: 255 }),
   },
   (tasks) => ({
     queueIdx: index("tasks_queue_idx").on(tasks.queue),

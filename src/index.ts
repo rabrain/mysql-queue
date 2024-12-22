@@ -1,5 +1,5 @@
 export { LiteQueue } from "./queue";
-export { buildDBClient, migrateDB } from "./db";
+export { connect, migrateDB } from "./db";
 export type { QueueOptions, RunnerOptions, RunnerFuncs } from "./options";
 export { Runner } from "./runner";
 

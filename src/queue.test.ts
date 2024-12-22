@@ -2,9 +2,9 @@
 import { describe, expect, test } from "vitest";
 
 import {
-    buildDBClient,
     LiteQueue
 } from "./";
+import { db } from "./test";
 
 interface Work {
   increment: number;
@@ -13,10 +13,10 @@ interface Work {
 }
 
 describe("LiteQueue", () => {
-  test("idempotency keys", async () => {
+  test("idempotency keys", async (context) => {
     const queue = new LiteQueue<Work>(
-      "queue1",
-      buildDBClient(undefined, true),
+      context.task.id,
+      db,
       {
         defaultJobArgs: {
           numRetries: 0,
@@ -40,10 +40,11 @@ describe("LiteQueue", () => {
 
   });
 
-  test("keep failed jobs", async () => {
+  test("keep failed jobs", async (context) => {
+    const id = context.task.id
     const queueKeep = new LiteQueue<Work>(
-      "queue1",
-      buildDBClient(undefined, true),
+      id + "queue1",
+      db,
       {
         defaultJobArgs: {
           numRetries: 0,
@@ -53,8 +54,8 @@ describe("LiteQueue", () => {
     );
 
     const queueDontKeep = new LiteQueue<Work>(
-      "queue2",
-      buildDBClient(undefined, true),
+      id + "queue2",
+      db,
       {
         defaultJobArgs: {
           numRetries: 0,

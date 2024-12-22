@@ -4,24 +4,20 @@ import mysql from "mysql2/promise";
 import path from "node:path";
 import * as schema from "./schema";
 
+export type Database = MySql2Database<typeof schema>;
+
 export const affectedRows = (rawResult: MySqlRawQueryResult) => {
     return rawResult[0].affectedRows
 };
 
-const defaultURL = 'mysql://root:root@localhost:3306/queue'
-
-export function buildDBClient(url?: string, runMigrations = false) {
-    const connection = mysql.createPool(url ?? defaultURL);
-    const db = drizzle(connection, { schema, mode: 'planetscale' });
-
-    if (runMigrations) {
-        migrateDB(db);
-    }
+export async function connect(url: string) {
+    const connection = await mysql.createConnection(url);
+    const db = drizzle(connection, { schema, mode: 'default' });
     return db;
 }
 
 export function migrateDB(db: MySql2Database<any>) {
-    migrate(db, {
+    return migrate(db, {
         migrationsFolder: path.join(__dirname, '../drizzle')
     });
 }

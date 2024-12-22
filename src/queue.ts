@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import { and, asc, count, eq, gt, lt, or, sql } from "drizzle-orm";
 
-import { affectedRows, buildDBClient } from "./db";
+import { affectedRows, type Database } from "./db";
 import { EnqueueOptions, QueueOptions } from "./options";
 import { Job, tasksTable } from "./db/schema";
 
@@ -12,12 +12,12 @@ function generateAllocationId() {
 
 export class LiteQueue<T> {
   queueName: string;
-  db: ReturnType<typeof buildDBClient>;
+  db: Database;
   options: QueueOptions;
 
   constructor(
     name: string,
-    db: ReturnType<typeof buildDBClient>,
+    db: Database,
     options: QueueOptions,
   ) {
     this.queueName = name;
@@ -117,14 +117,15 @@ export class LiteQueue<T> {
       assert(jobs.length == 1);
       const job = jobs[0];
 
+      const change = {
+        status: "running" as Job["status"],
+        numRunsLeft: job.numRunsLeft - 1,
+        allocationId: generateAllocationId(),
+        expireAt: new Date(new Date().getTime() + options.timeoutSecs * 1000),
+      };
       const result = await txn
         .update(tasksTable)
-        .set({
-          status: "running",
-          numRunsLeft: job.numRunsLeft - 1,
-          allocationId: generateAllocationId(),
-          expireAt: new Date(new Date().getTime() + options.timeoutSecs * 1000),
-        })
+        .set(change)
         .where(
           and(
             eq(tasksTable.id, job.id),
@@ -138,7 +139,7 @@ export class LiteQueue<T> {
         return null;
       }
       assert(rows == 1);
-      return job;
+      return Object.assign(job, change);
     });
   }
 
