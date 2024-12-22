@@ -141,9 +141,9 @@ function buildRunner(
 }
 
 describe("Queue Runner", async () => {
-  test("should run jobs with correct concurrency", async () => {
+  test("should run jobs with correct concurrency", async (context) => {
     const queue = new LiteQueue<Work>(
-      "queue1",
+      context.task.id,
       db,
       {
         defaultJobArgs: {
@@ -203,9 +203,9 @@ describe("Queue Runner", async () => {
     expect(results.numFailed).toEqual(0);
   });
 
-  test("should retry errors", async () => {
+  test("should retry errors", async (context) => {
     const queue = new LiteQueue<Work>(
-      "queue1",
+      context.task.id,
       db,
       {
         defaultJobArgs: {
@@ -241,9 +241,9 @@ describe("Queue Runner", async () => {
     expect(results.numFailed).toEqual(1);
   });
 
-  test("timeouts are respected", async () => {
+  test("timeouts are respected", async (context) => {
     const queue = new LiteQueue<Work>(
-      "queue1",
+      context.task.id,
       db,
       {
         defaultJobArgs: {
@@ -277,9 +277,9 @@ describe("Queue Runner", async () => {
     expect(results.numFailed).toEqual(1);
   });
 
-  test("serialization errors", async () => {
+  test("serialization errors", async (context) => {
     const queue = new LiteQueue<Work>(
-      "queue1",
+      context.task.id,
       db,
       {
         defaultJobArgs: {
@@ -322,9 +322,9 @@ describe("Queue Runner", async () => {
     expect(results.numFailed).toEqual(1);
   });
 
-  test("concurrent runners", async () => {
+  test("concurrent runners", async (context) => {
     const queue = new LiteQueue<Work>(
-      "queue1",
+      context.task.id,
       db,
       {
         defaultJobArgs: {
@@ -386,14 +386,15 @@ describe("Queue Runner", async () => {
     expect(results.numFailed).toEqual(0);
   });
 
-  test("large test", async () => {
-    const queue1 = new LiteQueue<Work>("queue1", db, {
+  test("large test", async (context) => {
+    const id = context.task.id
+    const queue1 = new LiteQueue<Work>(id + "queue1", db, {
       defaultJobArgs: {
         numRetries: 0,
       },
       keepFailedJobs: true,
     });
-    const queue2 = new LiteQueue<Work>("queue2", db, {
+    const queue2 = new LiteQueue<Work>(id + "queue2", db, {
       defaultJobArgs: {
         numRetries: 0,
       },

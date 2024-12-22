@@ -13,9 +13,9 @@ interface Work {
 }
 
 describe("LiteQueue", () => {
-  test("idempotency keys", async () => {
+  test("idempotency keys", async (context) => {
     const queue = new LiteQueue<Work>(
-      "queue1",
+      context.task.id,
       db,
       {
         defaultJobArgs: {
@@ -40,9 +40,10 @@ describe("LiteQueue", () => {
 
   });
 
-  test("keep failed jobs", async () => {
+  test("keep failed jobs", async (context) => {
+    const id = context.task.id
     const queueKeep = new LiteQueue<Work>(
-      "queue1",
+      id + "queue1",
       db,
       {
         defaultJobArgs: {
@@ -53,7 +54,7 @@ describe("LiteQueue", () => {
     );
 
     const queueDontKeep = new LiteQueue<Work>(
-      "queue2",
+      id + "queue2",
       db,
       {
         defaultJobArgs: {

@@ -9,6 +9,7 @@ export default defineConfig({
     alias: {
       "@/*": "./*",
     },
+    testTimeout: 20000,
     poolOptions: {
       threads: {
         singleThread: true
