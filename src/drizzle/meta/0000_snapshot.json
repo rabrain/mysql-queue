@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "5e96ed89-0bdf-4c0d-b7d9-4ab6d0111973",
+  "id": "4b17721e-a90c-4cdb-beb5-2d26dce5c576",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "tasks": {
@@ -140,9 +140,11 @@
             "idempotencyKey"
           ]
         }
-      }
+      },
+      "checkConstraint": {}
     }
   },
+  "views": {},
   "_meta": {
     "schemas": {},
     "tables": {},
