@@ -11,18 +11,20 @@ export const affectedRows = (rawResult: MySqlRawQueryResult) => {
 
 const defaultURL = env['DATABASE_URL'] ?? 'mysql://root:root@localhost:3306/queue'
 
-export function buildDBClient(url?: string, runMigrations = false) {
+export async function prepareDB(url?: string) {
+    const db = connect(url);
+    await migrateDB(db);
+    return db;
+}
+
+export function connect(url: string | undefined) {
     const connection = mysql.createPool(url ?? defaultURL);
     const db = drizzle(connection, { schema, mode: 'planetscale' });
-
-    if (runMigrations) {
-        migrateDB(db);
-    }
     return db;
 }
 
 export function migrateDB(db: MySql2Database<any>) {
-    migrate(db, {
+    return migrate(db, {
         migrationsFolder: path.join(__dirname, '../drizzle')
     });
 }

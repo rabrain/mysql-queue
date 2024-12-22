@@ -2,7 +2,7 @@
 import { describe, expect, test } from "vitest";
 
 import {
-    buildDBClient,
+    prepareDB,
     LiteQueue
 } from "./";
 
@@ -16,7 +16,7 @@ describe("LiteQueue", () => {
   test("idempotency keys", async () => {
     const queue = new LiteQueue<Work>(
       "queue1",
-      buildDBClient(undefined, true),
+      await prepareDB(),
       {
         defaultJobArgs: {
           numRetries: 0,
@@ -43,7 +43,7 @@ describe("LiteQueue", () => {
   test("keep failed jobs", async () => {
     const queueKeep = new LiteQueue<Work>(
       "queue1",
-      buildDBClient(undefined, true),
+      await prepareDB(),
       {
         defaultJobArgs: {
           numRetries: 0,
@@ -54,7 +54,7 @@ describe("LiteQueue", () => {
 
     const queueDontKeep = new LiteQueue<Work>(
       "queue2",
-      buildDBClient(undefined, true),
+      await prepareDB(),
       {
         defaultJobArgs: {
           numRetries: 0,

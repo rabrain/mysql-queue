@@ -5,7 +5,7 @@ import { describe, expect, test } from "vitest";
 import { z } from "zod";
 
 import {
-  buildDBClient,
+  prepareDB,
   DequeuedJob,
   DequeuedJobError,
   Runner,
@@ -144,7 +144,7 @@ describe("SqiteQueueRunner", () => {
   test("should run jobs with correct concurrency", async () => {
     const queue = new LiteQueue<Work>(
       "queue1",
-      buildDBClient(undefined, true),
+      await prepareDB(),
       {
         defaultJobArgs: {
           numRetries: 0,
@@ -206,7 +206,7 @@ describe("SqiteQueueRunner", () => {
   test("should retry errors", async () => {
     const queue = new LiteQueue<Work>(
       "queue1",
-      buildDBClient(undefined, true),
+      await prepareDB(),
       {
         defaultJobArgs: {
           numRetries: 2,
@@ -244,7 +244,7 @@ describe("SqiteQueueRunner", () => {
   test("timeouts are respected", async () => {
     const queue = new LiteQueue<Work>(
       "queue1",
-      buildDBClient(undefined, true),
+      await prepareDB(),
       {
         defaultJobArgs: {
           numRetries: 1,
@@ -280,7 +280,7 @@ describe("SqiteQueueRunner", () => {
   test("serialization errors", async () => {
     const queue = new LiteQueue<Work>(
       "queue1",
-      buildDBClient(undefined, true),
+      await prepareDB(),
       {
         defaultJobArgs: {
           numRetries: 1,
@@ -325,7 +325,7 @@ describe("SqiteQueueRunner", () => {
   test("concurrent runners", async () => {
     const queue = new LiteQueue<Work>(
       "queue1",
-      buildDBClient(undefined, true),
+      await prepareDB(),
       {
         defaultJobArgs: {
           numRetries: 0,
@@ -387,7 +387,7 @@ describe("SqiteQueueRunner", () => {
   });
 
   test("large test", async () => {
-    const db = buildDBClient(undefined, true);
+    const db = await prepareDB();
     const queue1 = new LiteQueue<Work>("queue1", db, {
       defaultJobArgs: {
         numRetries: 0,
