@@ -2,7 +2,6 @@ import { MySql2Database, type MySqlRawQueryResult, drizzle } from "drizzle-orm/m
 import { migrate } from "drizzle-orm/mysql2/migrator";
 import mysql from "mysql2/promise";
 import path from "node:path";
-import { env } from 'node:process';
 import * as schema from "./schema";
 
 export type Database = MySql2Database<typeof schema>;
@@ -10,18 +9,6 @@ export type Database = MySql2Database<typeof schema>;
 export const affectedRows = (rawResult: MySqlRawQueryResult) => {
     return rawResult[0].affectedRows
 };
-
-const defaultUrl = env['DATABASE_URL'] ?? 'mysql://root:root@localhost:3306/queue'
-
-let db: Database;
-
-export async function prepareDB(url?: string) {
-    if (!db) {
-        db = await connect(url ?? defaultUrl);
-        await migrateDB(db);
-    }
-    return db;
-}
 
 export async function connect(url: string) {
     const connection = await mysql.createConnection(url);

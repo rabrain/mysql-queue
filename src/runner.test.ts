@@ -5,7 +5,6 @@ import { describe, expect, test } from "vitest";
 import { z } from "zod";
 
 import {
-  prepareDB,
   DequeuedJob,
   DequeuedJobError,
   Runner,
@@ -13,6 +12,7 @@ import {
   LiteQueue,
 } from "./";
 import { tasksTable } from "./db/schema";
+import { db } from "./test";
 
 class Baton {
   semaphore: Semaphore;
@@ -140,11 +140,11 @@ function buildRunner(
   return { runner, results };
 }
 
-describe("Queue Runner", () => {
+describe("Queue Runner", async () => {
   test("should run jobs with correct concurrency", async () => {
     const queue = new LiteQueue<Work>(
       "queue1",
-      await prepareDB(),
+      db,
       {
         defaultJobArgs: {
           numRetries: 0,
@@ -206,7 +206,7 @@ describe("Queue Runner", () => {
   test("should retry errors", async () => {
     const queue = new LiteQueue<Work>(
       "queue1",
-      await prepareDB(),
+      db,
       {
         defaultJobArgs: {
           numRetries: 2,
@@ -244,7 +244,7 @@ describe("Queue Runner", () => {
   test("timeouts are respected", async () => {
     const queue = new LiteQueue<Work>(
       "queue1",
-      await prepareDB(),
+      db,
       {
         defaultJobArgs: {
           numRetries: 1,
@@ -280,7 +280,7 @@ describe("Queue Runner", () => {
   test("serialization errors", async () => {
     const queue = new LiteQueue<Work>(
       "queue1",
-      await prepareDB(),
+      db,
       {
         defaultJobArgs: {
           numRetries: 1,
@@ -325,7 +325,7 @@ describe("Queue Runner", () => {
   test("concurrent runners", async () => {
     const queue = new LiteQueue<Work>(
       "queue1",
-      await prepareDB(),
+      db,
       {
         defaultJobArgs: {
           numRetries: 0,
@@ -387,7 +387,6 @@ describe("Queue Runner", () => {
   });
 
   test("large test", async () => {
-    const db = await prepareDB();
     const queue1 = new LiteQueue<Work>("queue1", db, {
       defaultJobArgs: {
         numRetries: 0,
