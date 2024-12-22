@@ -15,7 +15,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hoarder-app/liteque.git"
+    "url": "git+https://github.com/rabrain/mysql-queue.git"
   },
   "keywords": [
     "queue"
