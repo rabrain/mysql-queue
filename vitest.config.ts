@@ -9,5 +9,10 @@ export default defineConfig({
     alias: {
       "@/*": "./*",
     },
+    poolOptions: {
+      threads: {
+        singleThread: true
+      }
+    }
   },
 });
