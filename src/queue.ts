@@ -117,14 +117,15 @@ export class LiteQueue<T> {
       assert(jobs.length == 1);
       const job = jobs[0];
 
+      const change = {
+        status: "running" as Job["status"],
+        numRunsLeft: job.numRunsLeft - 1,
+        allocationId: generateAllocationId(),
+        expireAt: new Date(new Date().getTime() + options.timeoutSecs * 1000),
+      };
       const result = await txn
         .update(tasksTable)
-        .set({
-          status: "running",
-          numRunsLeft: job.numRunsLeft - 1,
-          allocationId: generateAllocationId(),
-          expireAt: new Date(new Date().getTime() + options.timeoutSecs * 1000),
-        })
+        .set(change)
         .where(
           and(
             eq(tasksTable.id, job.id),
@@ -138,7 +139,7 @@ export class LiteQueue<T> {
         return null;
       }
       assert(rows == 1);
-      return job;
+      return Object.assign(job, change);
     });
   }
 
