@@ -5,21 +5,27 @@ import path from "node:path";
 import { env } from 'node:process';
 import * as schema from "./schema";
 
+export type Database = MySql2Database<typeof schema>;
+
 export const affectedRows = (rawResult: MySqlRawQueryResult) => {
     return rawResult[0].affectedRows
 };
 
-const defaultURL = env['DATABASE_URL'] ?? 'mysql://root:root@localhost:3306/queue'
+const defaultUrl = env['DATABASE_URL'] ?? 'mysql://root:root@localhost:3306/queue'
+
+let db: Database;
 
 export async function prepareDB(url?: string) {
-    const db = connect(url);
-    await migrateDB(db);
+    if (!db) {
+        db = await connect(url ?? defaultUrl);
+        await migrateDB(db);
+    }
     return db;
 }
 
-export function connect(url: string | undefined) {
-    const connection = mysql.createPool(url ?? defaultURL);
-    const db = drizzle(connection, { schema, mode: 'planetscale' });
+export async function connect(url: string) {
+    const connection = await mysql.createConnection(url);
+    const db = drizzle(connection, { schema, mode: 'default' });
     return db;
 }
 

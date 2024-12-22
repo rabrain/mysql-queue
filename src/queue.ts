@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import { and, asc, count, eq, gt, lt, or, sql } from "drizzle-orm";
 
-import { affectedRows, connect } from "./db";
+import { affectedRows, type Database } from "./db";
 import { EnqueueOptions, QueueOptions } from "./options";
 import { Job, tasksTable } from "./db/schema";
 
@@ -12,12 +12,12 @@ function generateAllocationId() {
 
 export class LiteQueue<T> {
   queueName: string;
-  db: ReturnType<typeof connect>;
+  db: Database;
   options: QueueOptions;
 
   constructor(
     name: string,
-    db: ReturnType<typeof connect>,
+    db: Database,
     options: QueueOptions,
   ) {
     this.queueName = name;

@@ -140,7 +140,7 @@ function buildRunner(
   return { runner, results };
 }
 
-describe("SqiteQueueRunner", () => {
+describe("Queue Runner", () => {
   test("should run jobs with correct concurrency", async () => {
     const queue = new LiteQueue<Work>(
       "queue1",
