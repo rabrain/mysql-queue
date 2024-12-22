@@ -14,10 +14,10 @@ $ npm install mysql-queue
 ## Usage
 
 ```ts
-import { buildDBClient, Runner, LiteQueue } from "mysql-queue";
+import { connect, Runner, LiteQueue } from "mysql-queue";
 import { z } from "zod";
 
-const db = buildDBClient("mysql://root:root@localhost:3306/queue", true);
+const db = connect("mysql://root:root@localhost:3306/queue");
 
 const requestSchema = z.object({
     message: z.string(),
