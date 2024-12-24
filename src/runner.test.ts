@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/require-await */
 import { Semaphore } from "async-mutex";
 import { eq } from "drizzle-orm";
 import { describe, expect, test } from "vitest";

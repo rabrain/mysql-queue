@@ -52,7 +52,7 @@ export class Runner<T> {
         );
         continue;
       }
-      const [_, release] = await semaphore.acquire();
+      const [, release] = await semaphore.acquire();
       inFlight.set(
         job.id,
         this.runOnce(job).finally(() => {
