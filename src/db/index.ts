@@ -18,6 +18,6 @@ export async function connect(url: string) {
 
 export function migrateDB(db: MySql2Database<Record<string, unknown>>) {
     return migrate(db, {
-        migrationsFolder: path.join(__dirname, '../drizzle')
+        migrationsFolder: path.join(import.meta.dirname, '../drizzle')
     });
 }
