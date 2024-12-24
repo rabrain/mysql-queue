@@ -3,7 +3,7 @@
   "name": "mysql-queue",
   "description": "A lite job queue for Node.js",
   "author": "lilac <hi@rabain.com>",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
