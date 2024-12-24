@@ -17,7 +17,7 @@ $ npm install mysql-queue
 import { connect, Runner, LiteQueue } from "mysql-queue";
 import { z } from "zod";
 
-const db = connect("mysql://root:root@localhost:3306/queue");
+const db = await connect("mysql://root:root@localhost:3306/queue");
 
 const requestSchema = z.object({
     message: z.string(),
