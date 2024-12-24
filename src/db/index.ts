@@ -11,7 +11,7 @@ export const affectedRows = (rawResult: MySqlRawQueryResult) => {
 };
 
 export async function connect(url: string) {
-    const connection = await mysql.createConnection(url);
+    const connection = mysql.createPool(url);
     const db = drizzle(connection, { schema, mode: 'default' });
     return db;
 }
