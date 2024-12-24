@@ -1,10 +1,6 @@
 name: Publish Package to npm
 on:
   workflow_dispatch:
-  push:
-    # branches: [main]
-    tags:
-      - "*"
   release:
     types: [published]
 jobs:
