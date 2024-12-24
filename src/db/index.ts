@@ -10,7 +10,7 @@ export const affectedRows = (rawResult: MySqlRawQueryResult) => {
     return rawResult[0].affectedRows
 };
 
-export async function connect(url: string) {
+export function connect(url: string) {
     const connection = mysql.createPool(url);
     const db = drizzle(connection, { schema, mode: 'default' });
     return db;
