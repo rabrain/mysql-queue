@@ -44,16 +44,16 @@ export class LiteQueue<T> {
       allocationId: generateAllocationId(),
       idempotencyKey: opts.idempotencyKey,
     };
-    
+
     const result = await this.db
       .insert(tasksTable)
       .values(jobData)
       .onDuplicateKeyUpdate({
         set: { id: sql`id` },
-    });
+      }).$returningId();
 
-    // Fetch and return the complete job
-    const insertedId = Number(result[0].insertId);
+    // Fetch the inserted job
+    const insertedId = result[0].id;
     const [job] = await this.db
       .select()
       .from(tasksTable)

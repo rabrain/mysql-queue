@@ -16,7 +16,7 @@ export async function connect(url: string) {
     return db;
 }
 
-export function migrateDB(db: MySql2Database<any>) {
+export function migrateDB(db: MySql2Database<Record<string, unknown>>) {
     return migrate(db, {
         migrationsFolder: path.join(__dirname, '../drizzle')
     });
