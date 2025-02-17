@@ -16,7 +16,9 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - shell: bash
-        run: corepack enable
+        # Workaround for pnpm key check error
+        # https://github.com/nodejs/corepack/issues/612#issuecomment-2615343301
+        run: corepack enable && corepack prepare pnpm@10.0.0 --activate
 
       - shell: bash
         run: pnpm install
