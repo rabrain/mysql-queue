@@ -1,6 +1,6 @@
 import { ZodType } from "zod";
 
-import { DequeuedJob, DequeuedJobError } from "./types";
+import { DequeuedJob, DequeuedJobError } from "./types.js";
 
 export interface QueueOptions {
   defaultJobArgs: {

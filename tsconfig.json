@@ -1,20 +1,21 @@
-  {
+{
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "@tsconfig/node21/tsconfig.json",
   "include": ["src"],
   "exclude": ["node_modules", "build", "dist"],
   "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "outDir": "./dist",
     "incremental": true,
     "isolatedModules": true,
     "strict": true,
     "esModuleInterop": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
-  },
+  }
 }
 

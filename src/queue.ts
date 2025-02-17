@@ -1,9 +1,9 @@
 import assert from "node:assert";
 import { and, asc, count, eq, gt, lt, or, sql } from "drizzle-orm";
 
-import { affectedRows, type Database } from "./db";
-import { EnqueueOptions, QueueOptions } from "./options";
-import { Job, tasksTable } from "./db/schema";
+import { affectedRows, type Database } from "./db/index.js";
+import { EnqueueOptions, QueueOptions } from "./options.js";
+import { Job, tasksTable } from "./db/schema.js";
 
 // generate random id
 function generateAllocationId() {

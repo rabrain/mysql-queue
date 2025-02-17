@@ -1,4 +1,4 @@
-import { connect, migrateDB } from "./db";
+import { connect, migrateDB } from "./db/index.js";
 import { env } from 'node:process';
 
 const defaultUrl = env['DATABASE_URL'] ?? 'mysql://root:root@localhost:3306/queue'

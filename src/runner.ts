@@ -1,10 +1,10 @@
 import assert from "node:assert";
 import { Semaphore } from "async-mutex";
 
-import { RunnerFuncs, RunnerOptions } from "./options";
-import { LiteQueue } from "./queue";
-import { Job } from "./db/schema";
-import { DequeuedJob } from "./types";
+import { RunnerFuncs, RunnerOptions } from "./options.js";
+import { LiteQueue } from "./queue.js";
+import { Job } from "./db/schema.js";
+import { DequeuedJob } from "./types.js";
 
 export class Runner<T> {
   queue: LiteQueue<T>;

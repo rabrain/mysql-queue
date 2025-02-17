@@ -9,9 +9,9 @@ import {
   Runner,
   RunnerOptions,
   LiteQueue,
-} from "./";
-import { tasksTable } from "./db/schema";
-import { db } from "./test";
+} from "./index.js";
+import { tasksTable } from "./db/schema.js";
+import { db } from "./test.js";
 
 class Baton {
   semaphore: Semaphore;

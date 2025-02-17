@@ -2,7 +2,7 @@ import { MySql2Database, type MySqlRawQueryResult, drizzle } from "drizzle-orm/m
 import { migrate } from "drizzle-orm/mysql2/migrator";
 import mysql from "mysql2/promise";
 import path from "node:path";
-import * as schema from "./schema";
+import * as schema from "./schema.js";
 
 export type Database = MySql2Database<Record<string, unknown>>;
 

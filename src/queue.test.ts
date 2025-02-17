@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vitest";
 
 import {
-    LiteQueue
-} from "./";
-import { db } from "./test";
+  LiteQueue
+} from "./index.js";
+import { db } from "./test.js";
 
 interface Work {
   increment: number;
